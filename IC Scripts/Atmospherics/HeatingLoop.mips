@@ -1,0 +1,80 @@
+alias AnalyzerHeating d0
+alias AnalyzerBuffer d1
+alias ACHeating d2
+alias PumpToHeating d3
+alias PumpToBuffer d4
+alias DialTemperature d5
+
+alias TargetPressure r8
+alias HeatingPressure r9
+alias BufferPressure r10
+alias k r11
+alias HeatingTemp r12
+alias TargetTemp r13
+
+# lock all devices
+s AnalyzerHeating Lock 1
+s AnalyzerBuffer Lock 1
+s ACHeating Lock 1
+s PumpToHeating Lock 1
+s PumpToBuffer Lock 1
+
+start:
+# set initial state of all devices
+s AnalyzerHeating On 0
+s AnalyzerBuffer On 1
+s ACHeating On 0
+s ACHeating Open 0
+s PumpToHeating On 0
+s PumpToHeating Setting 100
+s PumpToBuffer On 0
+s PumpToBuffer Setting 100
+
+# wait for buffer to lower pressure
+waitForBufferPressure:
+# maybe sleep longer in Production
+sleep 5
+l BufferPressure AnalyzerBuffer Pressure
+bge BufferPressure 40000 waitForBufferPressure
+
+# fill heating loop
+s AnalyzerHeating On 1
+s PumpToHeating On 1
+fillHeatingLoop:
+yield
+l TargetTemp DialTemperature Setting
+add TargetTemp TargetTemp 273.15
+div k 30000 TargetTemp
+l HeatingTemp AnalyzerHeating Temperature
+mul TargetPressure k HeatingTemp
+l HeatingPressure AnalyzerHeating Pressure
+#Set PumpToHeating.Setting
+div r0 HeatingPressure TargetPressure
+sub r0 1 r0
+mul r0 r0 500
+add r0 r0 10
+min r1 100 r0
+s PumpToHeating Setting r1
+bge TargetPressure HeatingPressure fillHeatingLoop
+s PumpToHeating On 0
+
+# start heating
+s ACHeating On 1
+s ACHeating Open 1
+# wait for HeatingTemp to reach target
+heatingLoop:
+yield
+l TargetTemp DialTemperature Setting
+add TargetTemp TargetTemp 273.15
+l HeatingTemp AnalyzerHeating Temperature
+bge TargetTemp HeatingTemp heatingLoop
+
+# pump to buffer
+pumpToBufferLoop:
+yield
+s PumpToBuffer Setting 100
+s PumpToBuffer On 1
+l HeatingPressure AnalyzerHeating Pressure
+bgtz HeatingPressure pumpToBufferLoop
+
+j start
