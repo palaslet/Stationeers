@@ -3,7 +3,7 @@
 This section contains different atmospherics scripts. The scripts are designed to automate different sections of the "Atmospherics Department"
 
 ## HeatingLoop
-(This loop is mostly designed for heating. It will be ajusted in the near future to accomodate for cooling as well)
+(This loop is mostly designed for heating because the script for the IC does not currently support cooling. It will be adjusted in the near future to accomodate for cooling as well)
 
 The current implementation (as of 05.08.2019) of the AC unit does not have D and I gain in it's power controller. The power is purely based on temperature difference (P gain). This results in it being very bad at holding target temperature in a gas loop. This is known as [steady-state error](https://en.wikipedia.org/wiki/PID_controller#Steady-state_error). It also trottles way down when it approaches target temperature so it takes long to heat/cool any significant amount of gas.
 
