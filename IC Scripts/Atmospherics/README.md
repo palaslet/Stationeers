@@ -4,9 +4,9 @@ This section contains different atmospherics scripts. The scripts are designed t
 
 ## HeatingLoop
 
-The current implementation (as of 05.08.2019) of the AC unit does not have D and I gain in it's power controller. The power is purely based on temperature difference (P gain). This results in it being very bad at holding target temperature in a gas loop. It also trottles way down when it approaches target temperature so it takes long to heat/cool any significant amount of gas.
+The current implementation (as of 05.08.2019) of the AC unit does not have D and I gain in it's power controller. The power is purely based on temperature difference (P gain). This results in it being very bad at holding target temperature in a gas loop. This is known as [steady-state error](https://en.wikipedia.org/wiki/PID_controller#Steady-state_error). It also trottles way down when it approaches target temperature so it takes long to heat/cool any significant amount of gas.
 
-The heating loop will use one AC to heat gasses to desired temperature and then transfer the gasses to an isolated holding tank or buffer. The buffer can then provide a source of constant temperature gas. Since the IC is controlling the loop, the AC can be set to target a temperature way higher than what we want and thus it will run on max power until the IC decides the target temperature is reached.
+The heating loop will use one AC to heat gasses to desired temperature and then transfer the gasses to an isolated holding tank or buffer. The buffer can then provide a source of constant temperature gas. Since the IC is controlling the loop, the AC can be set to target a temperature way higher than what we want (effectively adding a compensating bias term) and thus it will run on max power until the IC decides the target temperature is reached.
 
 The Loop also operates at high pressures, ensuring maximum efficiency. Since it's aiming to run the AC at 7kW when heating, all electrical cabling related to this setup must be of the heavy type.
 
