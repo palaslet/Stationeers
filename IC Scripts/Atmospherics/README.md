@@ -3,6 +3,7 @@
 This section contains different atmospherics scripts. The scripts are designed to automate different sections of the "Atmospherics Department"
 
 ## HeatingLoop
+(This loop is mostly designed for heating. It will be ajusted in the near future to accomodate for cooling as well)
 
 The current implementation (as of 05.08.2019) of the AC unit does not have D and I gain in it's power controller. The power is purely based on temperature difference (P gain). This results in it being very bad at holding target temperature in a gas loop. This is known as [steady-state error](https://en.wikipedia.org/wiki/PID_controller#Steady-state_error). It also trottles way down when it approaches target temperature so it takes long to heat/cool any significant amount of gas.
 
@@ -10,7 +11,7 @@ The heating loop will use one AC to heat gasses to desired temperature and then 
 
 The Loop also operates at high pressures, ensuring maximum efficiency. Since it's aiming to run the AC at 7kW when heating, all electrical cabling related to this setup must be of the heavy type.
 
-Finally, the AC "colant" port will be connected to our atmospheric waste network, so we will recycle some of the heat coming from funrnaces, greenhouses, etc. If our need is more about cooling, then a seperate cooling pipe can be created. Or, one could make the IC decide between two loops based on the needs.
+Finally, the AC "colant" port will be connected to our atmospheric waste network, so we will recycle some of the heat coming from furnaces, greenhouses, etc. If our need is more about cooling, then a seperate cooling pipe can be created. Or, one could make the IC decide between two loops based on the needs.
 
 ### Construction
 
