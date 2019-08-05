@@ -1,0 +1,86 @@
+{
+	"program": "alias AnalyzerHeating d0\nalias AnalyzerBuffer d1\nalias ACHeating d2\nalias PumpToHeating d3\nalias PumpToBuffer d4\nalias DialTemperature d5\n\nalias TargetPressure r8\nalias HeatingPressure r9\nalias BufferPressure r10\nalias k r11\nalias HeatingTemp r12\nalias TargetTemp r13\n\n# lock all devices\ns AnalyzerHeating Lock 1\ns AnalyzerBuffer Lock 1\ns ACHeating Lock 1\ns PumpToHeating Lock 1\ns PumpToBuffer Lock 1\n\nstart:\n# set initial state of all devices\ns AnalyzerHeating On 0\ns AnalyzerBuffer On 1\ns ACHeating On 0\ns ACHeating Open 0\ns PumpToHeating On 0\ns PumpToHeating Setting 100\ns PumpToBuffer On 0\ns PumpToBuffer Setting 100\n\n# wait for buffer to lower pressure\nwaitForBufferPressure:\n# maybe sleep longer in Production\nsleep 5\nl BufferPressure AnalyzerBuffer Pressure\nbge BufferPressure 40000 waitForBufferPressure\n\n# fill heating loop\ns AnalyzerHeating On 1\ns PumpToHeating On 1\nfillHeatingLoop:\nyield\nl TargetTemp DialTemperature Setting\nadd TargetTemp TargetTemp 273.15\ndiv k 30000 TargetTemp\nl HeatingTemp AnalyzerHeating Temperature\nmul TargetPressure k HeatingTemp\nl HeatingPressure AnalyzerHeating Pressure\n#Set PumpToHeating.Setting\ndiv r0 HeatingPressure TargetPressure\nsub r0 1 r0\nmul r0 r0 500\nadd r0 r0 10\nmin r1 100 r0\ns PumpToHeating Setting r1\nbge TargetPressure HeatingPressure fillHeatingLoop\ns PumpToHeating On 0\n\n# start heating\ns ACHeating On 1\ns ACHeating Open 1\n# wait for HeatingTemp to reach target\nheatingLoop:\nyield\nl TargetTemp DialTemperature Setting\nadd TargetTemp TargetTemp 273.15\nl HeatingTemp AnalyzerHeating Temperature\nbge TargetTemp HeatingTemp heatingLoop\n\n# pump to buffer\npumpToBufferLoop:\nyield\ns PumpToBuffer Setting 100\ns PumpToBuffer On 1\nl HeatingPressure AnalyzerHeating Pressure\nbgtz HeatingPressure pumpToBufferLoop\n\nj start",
+	"registers": {
+		"io": [
+			{
+				"Lock": 1,
+				"On": 1,
+				"Pressure": 0,
+				"Temperature": 294
+			},
+			{
+				"Lock": 1,
+				"On": 1,
+				"Pressure": 39000
+			},
+			{
+				"Lock": 1,
+				"On": 1,
+				"Open": 1
+			},
+			{
+				"Lock": 1,
+				"On": 0,
+				"Setting": 9.98381666666669
+			},
+			{
+				"Lock": 1,
+				"On": 1,
+				"Setting": 100
+			},
+			{
+				"Setting": 20
+			},
+			{}
+		],
+		"ioConnected": [
+			true,
+			true,
+			true,
+			true,
+			true,
+			true,
+			true
+		],
+		"internal": [
+			9.98381666666669,
+			9.98381666666669,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			5116.834385127068,
+			0,
+			39000,
+			102.33668770254137,
+			294,
+			293.15,
+			0,
+			0,
+			0,
+			0
+		],
+		"ioSlot": [
+			{},
+			{},
+			{},
+			{},
+			{},
+			{},
+			{}
+		],
+		"ioReagent": [
+			{},
+			{},
+			{},
+			{},
+			{},
+			{},
+			{}
+		]
+	},
+	"runAfterRegisterChange": true,
+	"runWithErrors": false
+}
