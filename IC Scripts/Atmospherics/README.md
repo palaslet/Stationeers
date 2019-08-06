@@ -11,7 +11,7 @@ The heating loop will use one AC to heat gasses to desired temperature and then 
 
 The Loop also operates at high pressures, ensuring maximum efficiency. Since it's aiming to run the AC at 7kW when heating, all electrical cabling related to this setup must be of the heavy type.
 
-Finally, the AC "colant" port will be connected to our atmospheric waste network, so we will recycle some of the heat coming from furnaces, greenhouses, etc. If our need is more about cooling, then a seperate cooling pipe can be created. Or, one could make the IC decide between two loops based on the needs.
+Finally, the AC "coolant" port will be connected to our atmospheric waste network, so we will recycle some of the heat coming from furnaces, greenhouses, etc.
 
 ### Construction
 
@@ -40,5 +40,6 @@ Setup:
 3. Put the Dial in a nice spot (It's used to set the target temperature for the heating)
 4. Connect the IC to the loop using only heavy cables. Make sure it has signal to all electrical devices in the loop.
 5. Configure the IC so it has the correct device on the correct slot.
-6. Set target temperature and start it up.
-7. Isolate the buffer tank by building it inside a stage 3 iron frame. You can isolate the entire loop in this way, but it might be usefull to keep some of it accessible for monitoring purposes.
+6. Set the AC temperature setting way higher than you'll ever want to heat the gasses. 40 degrees above will probably do the trick, but there is no real reason not to crank it all up to maximum.
+8. Set target temperature and start it up.
+9. Isolate all piping and tank(s) as best as possible with stage 3 iron frames. The more pipes you get isolated, the better the efficiency of the system will be. If you want to monitor what's happening, you can create console displays on the outside.
