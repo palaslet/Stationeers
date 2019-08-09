@@ -10,10 +10,18 @@ namespace StationeersStuff
     {
         public GasMixture GasMixture = new GasMixture();
 
-        public float PressureGasses;
+        public float PressureGassesAndLiquidsInPa;
+
+        public float Volume { get; internal set; }
+
+        public float TotalMoles { get { return GasMixture.TotalMolesGassesAndLiquids; } }
         public GasMixture Remove(float transferMoles)
         {
             return null;
+        }
+
+        public void Add(GasMixture gasMixture)
+        {
         }
     }
 }
