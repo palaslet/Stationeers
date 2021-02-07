@@ -1,0 +1,43 @@
+alias DaylightSensor d0
+
+alias SensorActivate r0
+alias SensorVertical r1
+alias SensorHorizontal r2
+alias PanelVertical r3
+alias PanelHorizontal r4
+
+start:
+yield
+
+#input
+l SensorVertical DaylightSensor Vertical
+l SensorHorizontal DaylightSensor Horizontal
+l SensorActivate DaylightSensor Activate
+
+#check if the sun is up
+beq SensorActivate 0 nightMode
+
+#calculate vertical
+min PanelVertical 15 SensorVertical
+sub PanelVertical SensorVertical PanelVertical
+div PanelVertical PanelVertical 1.5
+min PanelVertical 100 PanelVertical
+
+# calculate horizontal
+brgt SensorVertical 90 3
+sub PanelHorizontal 90 SensorHorizontal # morning
+jr 2
+add PanelHorizontal SensorHorizontal 90 # evening
+
+j end
+
+nightMode:
+move PanelVertical 0
+sub PanelHorizontal 90 SensorHorizontal # morning
+
+end:
+#output
+sb -2045627372 Vertical PanelVertical
+sb -2045627372 Horizontal PanelHorizontal
+
+j start
