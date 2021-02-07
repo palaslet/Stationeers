@@ -1,0 +1,67 @@
+{
+	"program": "alias DaylightSensor d0\n\nalias SensorActivate r0\nalias SensorVertical r1\nalias SensorHorizontal r2\nalias PanelVertical r3\nalias PanelHorizontal r4\n\nstart:\nyield\n\n#input\nl SensorVertical DaylightSensor Vertical\nl SensorHorizontal DaylightSensor Horizontal\nl SensorActivate DaylightSensor Activate\n\n#check if the sun is up\nbeq SensorActivate 0 nightMode\n\n#calculate vertical\nmin PanelVertical 15 SensorVertical\nsub PanelVertical SensorVertical PanelVertical\ndiv PanelVertical PanelVertical 1.5\nmin PanelVertical 100 PanelVertical\n\n# calculate horizontal\nbrgt SensorVertical 90 3\nsub PanelHorizontal 90 SensorHorizontal # morning\njr 2\nadd PanelHorizontal SensorHorizontal 90 # evening\n\nj end\n\nnightMode:\nmove PanelVertical 0\nsub PanelHorizontal 90 SensorHorizontal # morning\n\nend:\n#output\nsb -2045627372 Vertical PanelVertical\nsb -2045627372 Horizontal PanelHorizontal\n\nj start",
+	"registers": {
+		"io": [
+			{
+				"Vertical": 91,
+				"Horizontal": -8,
+				"Activate": 1
+			},
+			{},
+			{},
+			{},
+			{},
+			{},
+			{}
+		],
+		"ioConnected": [
+			true,
+			true,
+			true,
+			true,
+			true,
+			true,
+			true
+		],
+		"internal": [
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0
+		],
+		"ioSlot": [
+			{},
+			{},
+			{},
+			{},
+			{},
+			{},
+			{}
+		],
+		"ioReagent": [
+			{},
+			{},
+			{},
+			{},
+			{},
+			{},
+			{}
+		]
+	},
+	"runAfterRegisterChange": false,
+	"runWithErrors": false
+}
