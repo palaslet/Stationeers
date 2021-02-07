@@ -1,0 +1,31 @@
+alias AirTank d0
+alias AirMixer d1
+alias NewOxygenRatio r0
+alias Gain r1
+alias AirTankPressure r2
+
+start:
+yield
+
+l AirTankPressure AirTank Pressure
+bge AirTankPressure 15000 skip
+
+s AirMixer On 1
+s AirMixer Setting 20
+blez AirTankPressure start
+
+l r3 AirTank RatioOxygen
+max r3 r3 0.01
+div Gain 0.2 r3
+
+
+mul NewOxygenRatio 20 Gain
+max NewOxygenRatio NewOxygenRatio 0
+min NewOxygenRatio NewOxygenRatio 100
+
+s AirMixer Setting NewOxygenRatio
+j start
+
+skip:
+s AirMixer On 0
+j start
