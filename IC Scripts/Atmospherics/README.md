@@ -43,3 +43,7 @@ Setup:
 6. Set the AC temperature setting way higher than you'll ever want to heat the gasses. 40 degrees above will probably do the trick, but there is no real reason not to crank it all up to maximum.
 8. Set target temperature and start it up.
 9. Isolate all piping and tank(s) as best as possible with stage 3 iron frames. The more pipes you get isolated, the better the efficiency of the system will be. If you want to monitor what's happening, you can create console displays on the outside.
+
+## AirMixer
+Will control a GasMixer to keep a tank balanced with 20% oxygen.
+I'm not sure why the GasMixer cannot do this on its own. Maybe an issue with different temperatur on the input gasses.
