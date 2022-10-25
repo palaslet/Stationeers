@@ -31,9 +31,9 @@ add PanelHorizontal SensorHorizontal 90 # evening
 
 j end
 
-nightMode:
+nightMode: # reset to morning orientation
 move PanelVertical 0
-sub PanelHorizontal 90 SensorHorizontal # morning
+move PanelHorizontal 90
 
 end:
 #output
