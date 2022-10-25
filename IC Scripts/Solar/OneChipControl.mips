@@ -18,10 +18,7 @@ l SensorActivate DaylightSensor Activate
 beq SensorActivate 0 nightMode
 
 #calculate vertical
-min PanelVertical 15 SensorVertical
-sub PanelVertical SensorVertical PanelVertical
-div PanelVertical PanelVertical 1.5
-min PanelVertical 100 PanelVertical
+max PanelVertical 15 SensorVertical
 
 # calculate horizontal
 brgt SensorVertical 90 3
@@ -31,9 +28,9 @@ add PanelHorizontal SensorHorizontal 90 # evening
 
 j end
 
-nightMode: # reset to morning orientation
+nightMode:
 move PanelVertical 0
-move PanelHorizontal 90
+move PanelHorizontal 90 # morning
 
 end:
 #output
