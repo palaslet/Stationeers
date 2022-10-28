@@ -16,6 +16,7 @@ l SensorActivate DaylightSensor Activate
 
 #check if the sun is up
 beq SensorActivate 0 nightMode
+bgt SensorVertical 270 nightMode # fixes issue with angel being large in the morning, causing panels to flip around
 
 #calculate vertical
 max PanelVertical 15 SensorVertical
