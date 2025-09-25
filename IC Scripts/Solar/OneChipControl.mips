@@ -1,42 +1,34 @@
 alias DaylightSensor d0
 
-alias SensorActivate r0
-alias SensorVertical r1
-alias SensorHorizontal r2
-alias PanelVertical r3
-alias PanelHorizontal r4
-alias LastSensorVertical r5
-
-#init
-l LastSensorVertical DaylightSensor Vertical
-
+alias SensorVertical r0
+alias SensorHorizontal r1
+alias PanelVertical r2
+alias PanelHorizontal r3
 
 start:
 yield
 
-l SensorVertical DaylightSensor Vertical
 
 #check if it's night
-bgt LastSensorVertical SensorVertical nightMode
+l SensorVertical DaylightSensor Vertical
+bgt SensorVertical 90 nightMode
 
 #calculate vertical
-max PanelVertical 15 SensorVertical
+sub PanelVertical 90 SensorVertical
+max PanelVertical 15 PanelVertical
+
 
 # calculate horizontal
 l SensorHorizontal DaylightSensor Horizontal
-brgt SensorVertical 90 3
-sub PanelHorizontal 90 SensorHorizontal # morning
-jr 2
-add PanelHorizontal SensorHorizontal 90 # evening
+add PanelHorizontal SensorHorizontal 90
 
 j end
 
 nightMode:
 move PanelVertical 0
-move PanelHorizontal 90 # morning
+move PanelHorizontal 90
 
 end:
-move LastSensorVertical SensorVertical
 
 #output
 sb -2045627372 Vertical PanelVertical
