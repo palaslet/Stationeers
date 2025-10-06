@@ -1,0 +1,60 @@
+define TRIGGER_PRESSURE 100
+
+alias FilterUnit db
+
+alias filterGasRatio r0
+alias filterHash r1
+alias filterGasPressure r2
+alias inputPressure r3
+
+mainLoop:
+yield
+
+ls filterHash FilterUnit 0 OccupantHash
+
+l filterGasRatio FilterUnit RatioCarbonDioxideInput
+beq filterHash 1635000764 filterFound
+beq filterHash 416897318 filterFound
+beq filterHash 1876847024 filterFound
+beq filterHash -185568964 filterFound
+l filterGasRatio FilterUnit RatioNitrogenInput
+beq filterHash 632853248 filterFound
+beq filterHash -632657357 filterFound
+beq filterHash -1387439451 filterFound
+beq filterHash 152751131 filterFound
+l filterGasRatio FilterUnit RatioNitrousOxideInput
+beq filterHash -1247674305 filterFound
+beq filterHash 1824284061 filterFound
+beq filterHash 465267979 filterFound
+beq filterHash -123934842 filterFound
+l filterGasRatio FilterUnit RatioOxygenInput
+beq filterHash -721824748 filterFound
+beq filterHash -1067319543 filterFound
+beq filterHash -1217998945 filterFound
+beq filterHash -1055451111 filterFound
+l filterGasRatio FilterUnit RatioPollutantInput
+beq filterHash 1915566057 filterFound
+beq filterHash 63677771 filterFound
+beq filterHash 1959564765 filterFound
+beq filterHash -503738105 filterFound
+l filterGasRatio FilterUnit RatioVolatilesInput
+beq filterHash 15011598 filterFound
+beq filterHash 1037507240 filterFound
+beq filterHash 1255156286 filterFound
+beq filterHash -1916176068 filterFound
+
+j setStandby
+
+filterFound:
+l inputPressure FilterUnit PressureInput
+mul filterGasPressure inputPressure filterGasRatio
+blt filterGasPressure TRIGGER_PRESSURE setStandby
+
+setActive:
+s FilterUnit Mode 1
+j mainLoop
+
+setStandby:
+s FilterUnit Mode 0
+sleep 5
+j mainLoop
