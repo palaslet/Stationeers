@@ -1,0 +1,25 @@
+define LightMinutes 10.5
+define GrowLightHash -1758710260
+
+alias DaylightSensor d0
+
+alias SensorHorizontal r0
+alias MaxAngleForLight r1
+
+# init
+mul MaxAngleForLight LightMinutes 18
+
+# loop
+start:
+yield
+
+l SensorHorizontal DaylightSensor Horizontal
+bgt SensorHorizontal MaxAngleForLight lightOff
+
+lightOn:
+sb GrowLightHash On 1
+j start
+
+lightOff:
+sb GrowLightHash On 0
+j start
