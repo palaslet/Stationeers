@@ -1,0 +1,94 @@
+define LightMinutes 10.5
+define GrowLightHash -1758710260
+define TargetPressure 50
+define MaxPressureDiff 5
+
+alias DaylightSensor d0
+alias GasSensor d1
+alias VolumePumpIn d2
+alias VolumePumpOut d3
+
+alias SensorHorizontal r0
+alias MaxAngleForLight r1
+alias GrowLightOn r2
+alias RoomPressure r3
+alias TempValue r4
+alias RoomCarbonDioxide r5
+alias RoomOxygen r6
+alias RoomPoison r7
+alias PumpInFlow r8
+alias PumpOutFlow r9
+alias PumpFlowDiff r10
+alias PressureDiff r11
+
+# init
+mul MaxAngleForLight LightMinutes 18
+div MaxAngleForLight MaxAngleForLight 2
+
+# loop
+start:
+yield
+
+# Grow Light
+l SensorHorizontal DaylightSensor Horizontal
+abs SensorHorizontal SensorHorizontal
+sle GrowLightOn SensorHorizontal MaxAngleForLight
+sb GrowLightHash On GrowLightOn
+#s GrowLight On GrowLightOn
+
+# Atmosphere
+# Pressure
+l RoomPressure GasSensor Pressure
+sub PressureDiff RoomPressure TargetPressure
+brgt PressureDiff MaxPressureDiff 2
+move PressureDiff 0
+mul PumpFlowDiff PressureDiff 0.5
+
+#Toxins
+l RoomPoison GasSensor RatioPollutant
+l TempValue GasSensor RatioVolatiles
+add RoomPoison RoomPoison TempValue
+l TempValue GasSensor RatioNitrousOxide
+add RoomPoison RoomPoison TempValue
+bge RoomPoison 0.004 cycleAir
+bge RoomPoison 0.001 circulateAir
+
+# Carbon Dioxide
+l RoomCarbonDioxide GasSensor RatioCarbonDioxide
+blt RoomCarbonDioxide 0.02 circulateAir
+
+# Oxygen
+l TempValue GasSensor RatioOxygen
+mul RoomOxygen TempValue RoomPressure
+bge RoomOxygen 20 circulateAir
+
+regulatePressure:
+bgtz PumpFlowDiff circulateAir
+move PumpOutFlow 0
+j writePumpSettings
+
+cycleAir: # used to quickly cycle all the atmosphere
+move PumpOutFlow 10
+j writePumpSettings
+
+circulateAir: # a bit more gentle than cycle air.
+move PumpOutFlow 5
+j writePumpSettings
+
+writePumpSettings:
+max PumpOutFlow 0 PumpOutFlow
+min PumpOutFlow PumpOutFlow 10
+sub PumpInFlow PumpOutFlow PumpFlowDiff
+max PumpInFlow 0 PumpInFlow
+min PumpInFlow PumpInFlow 10
+
+s VolumePumpOut Setting PumpOutFlow
+s VolumePumpIn Setting PumpInFlow
+
+sgtz TempValue PumpOutFlow
+s VolumePumpOut On TempValue
+
+sgtz TempValue PumpInFlow
+s VolumePumpIn On TempValue
+
+j start
